@@ -210,3 +210,101 @@ sequenceDiagram
     UI->>UI: Llama a showView('view-dashboard')
     UI->>Usuario: Muestra el dashboard actualizado
 ```
+
+### 5.4 Flujo de Visualización del Dashboard
+
+```mermaid
+sequenceDiagram
+    participant UI as Frontend (dashboard.js)
+    participant API as Backend (reportes/dashboard)
+    participant Repo as Base de Datos (SQLite)
+
+    UI->>API: GET /reportes/gastos-por-categoria
+    Note right of API: El Header incluye el Bearer Token
+    
+    API->>Repo: SELECT SUM(monto), categoria GROUP BY categoria
+    Repo-->>API: Datos agrupados
+    
+    API->>API: Formatea datos para Chart.js
+    API-->>UI: 200 OK (JSON con etiquetas y valores)
+    
+    UI->>UI: Inicializa Canvas (Chart.js)
+    UI->>UI: Renderiza Gráfico de Torta/Barras
+```
+
+### 5.5 Flujo de Visualización de Reportes
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant UI as Frontend (reportes.js)
+    participant API as Backend (reportes/movimientos)
+    participant Repo as Base de Datos (SQLite)
+
+    Usuario->>UI: Clic en Reportes
+    UI->>UI: Limpia la tabla y el lienzo del gráfico
+    
+    UI->>API: GET /reportes/movimientos (Fecha: Enero)
+    Note right of API: Header: Bearer Token
+    
+    API->>Repo: SELECT * FROM movimientos WHERE fecha >= ... ORDER BY fecha DESC
+    Repo-->>API: Lista de 15 movimientos
+    
+    API->>API: Calcula Totales (Ingresos/Gastos)
+    API-->>UI: 200 OK (Data + Totales)
+    
+    UI->>UI: Itera y dibuja filas en la tabla HTML
+    UI->>UI: Inicializa Chart.js (Gráfico de Línea)
+    UI->>UI: Renderiza Líneas de Tendencia
+```
+
+### 5.6 Flujo de Edición de un Movimiento
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant UI as Frontend (movimientos.js)
+    participant API as Backend (movimientos.py)
+    participant Repo as Base de Datos (SQLite)
+
+    Usuario->>UI: Clic en icono Lápiz (Editar)
+    UI->>API: GET /movimientos/{id}
+    API-->>UI: 200 OK (Datos del movimiento)
+    
+    UI->>UI: Pre-carga los datos en el formulario (Pinta el monto y la categoría)
+    
+    Usuario->>UI: Cambia el monto a "8.00" y actualiza categoría
+    UI->>API: PUT /movimientos/{id} (Header: Bearer Token)
+    
+    API->>API: Valida Token y JSON
+    API->>Repo: session.merge(MovimientoActualizado)
+    API->>Repo: session.commit()
+    Repo-->>API: Fila actualizada
+    
+    API-->>UI: 200 OK
+    UI->>UI: Cierra el formulario
+    UI->>UI: Muestra notificación Toast (Azul/Actualización)
+    UI->>UI: Llama a refreshDashboard() y lista_movimientos()
+```
+
+### 5.7 Flujo de Autenticación con JWT
+
+```mermaid
+sequenceDiagram
+    participant UI as api.js (Proxy)
+    participant API as FastAPI Middleware
+    participant App as Lógica del Endpoint
+
+    UI->>API: Cualquier petición protegida (Header: Authorization)
+    
+    API->>API: ¿El Token está presente y es válido?
+    
+    alt Token Válido
+        API->>App: Procesa la solicitud
+        App-->>UI: Respuesta exitosa
+    else Token Expirado o Inválido
+        API-->>UI: 401 Unauthorized
+        UI->>UI: Borra localStorage (Logout proactivo)
+        UI->>UI: Redirige a /login
+    end
+```
