@@ -113,7 +113,73 @@ Cada vista tiene un archivo JS que asocia los eventos (`addEventListener`) a la 
 
 ---
 
-## 5. Diagrama de Secuencia: Flujo de Creación de un Gasto
+## 5. Diagramas de Secuencia:
+
+### 5.1 Flujo de Inicio de Sesión
+
+A continuación se grafica el ciclo de vida completo de un evento común: el usuario iniciando sesión en la aplicación.
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant UI as Frontend (UI/JS)
+    participant API as Backend (FastAPI)
+    participant Repo as Base de Datos (SQLite)
+
+    Usuario->>UI: Clic en botón "Login"
+    UI->>API: GET /categorias/
+    API-->>UI: Devuelve lista de categorías
+    UI->>Usuario: Muestra formulario
+
+    Usuario->>UI: Llena correo, elige "Transporte" y clic Guardar
+    UI->>API: POST /movimientos/ (Header: Bearer Token)
+    
+    API->>API: Valida Token JWT
+    API->>API: Valida JSON entrante (Pydantic)
+    
+    API->>Repo: session.add(NuevoMovimiento)
+    API->>Repo: session.commit()
+    Repo-->>API: Row insertado correctamente
+    
+    API-->>UI: 201 Created (JSON del Movimiento)
+    UI->>UI: Muestra notificación Toast (Verde)
+    UI->>UI: Llama a showView('view-dashboard')
+    UI->>Usuario: Muestra el dashboard actualizado
+```
+
+### 5.2 Flujo de Registro de un Usuario
+
+A continuación se grafica el ciclo de vida completo de un evento común: el usuario registrando un nuevo usuario en la aplicación.
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant UI as Frontend (UI/JS)
+    participant API as Backend (FastAPI)
+    participant Repo as Base de Datos (SQLite)
+
+    Usuario->>UI: Clic en botón "Registrarse"
+    UI->>API: GET /categorias/
+    API-->>UI: Devuelve lista de categorías
+    UI->>Usuario: Muestra formulario
+
+    Usuario->>UI: Llena correo, elige "Transporte" y clic Guardar
+    UI->>API: POST /movimientos/ (Header: Bearer Token)
+    
+    API->>API: Valida Token JWT
+    API->>API: Valida JSON entrante (Pydantic)
+    
+    API->>Repo: session.add(NuevoMovimiento)
+    API->>Repo: session.commit()
+    Repo-->>API: Row insertado correctamente
+    
+    API-->>UI: 201 Created (JSON del Movimiento)
+    UI->>UI: Muestra notificación Toast (Verde)
+    UI->>UI: Llama a showView('view-dashboard')
+    UI->>Usuario: Muestra el dashboard actualizado
+```
+
+### 5.3 Flujo de Creación de un Gasto
 
 A continuación se grafica el ciclo de vida completo de un evento común: el usuario registrando la compra de un "Uber".
 
