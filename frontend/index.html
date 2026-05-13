@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MoneyFlow</title>
+    <!-- Google Fonts para un aspecto moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js para gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Este div simula la pantalla del teléfono -->
+    <div id="app-container">
+        
+        <!-- ================= PANTALLA DE LOGIN ================= -->
+        <section id="view-login" class="view active">
+            <div class="glass-card login-box">
+                <div class="logo-container">
+                    <div class="logo-circle">💸</div>
+                    <h1>MoneyFlow</h1>
+                    <p>Tus finanzas, bajo control.</p>
+                </div>
+                
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="login-email">Correo Universitario</label>
+                        <input type="email" id="login-email" required placeholder="tu@correo.edu">
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar a mi cuenta</button>
+                </form>
+                <div class="switch-view">
+                    ¿No tienes cuenta? <a href="#" id="go-to-register">Regístrate</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANTALLA DE REGISTRO ================= -->
+        <section id="view-register" class="view">
+            <div class="glass-card login-box">
+                <h2>Crear Cuenta</h2>
+                <form id="register-form">
+                    <div class="input-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <input type="text" id="reg-name" required placeholder="Ej. Ana Pérez">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <input type="email" id="reg-email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Comenzar</button>
+                </form>
+                <div class="switch-view">
+                    ¿Ya tienes cuenta? <a href="#" id="go-to-login">Inicia sesión</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANTALLA PRINCIPAL (DASHBOARD) ================= -->
+        <section id="view-dashboard" class="view">
+            <header class="app-header">
+                <div class="user-info">
+                    <div class="avatar">👤</div>
+                    <div>
+                        <span class="greeting">Hola,</span>
+                        <strong id="user-name-display">Usuario</strong>
+                    </div>
+                </div>
+                <button id="btn-logout" class="btn-icon" title="Cerrar sesión">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                </button>
+            </header>
+
+            <div class="glass-card balance-card">
+                <h3>Saldo Actual</h3>
+                <h1 id="balance-total">Q 0.00</h1>
+                
+                <div class="balance-row">
+                    <div class="balance-col">
+                        <span class="icon-up">↗</span>
+                        <div>
+                            <small>Ingresos</small>
+                            <strong id="balance-ingresos" class="text-green">Q 0.00</strong>
+                        </div>
+                    </div>
+                    <div class="balance-col">
+                        <span class="icon-down">↘</span>
+                        <div>
+                            <small>Gastos</small>
+                            <strong id="balance-gastos" class="text-red">Q 0.00</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-grid">
+                <button id="btn-add-income" class="btn-action glass-btn">
+                    <span class="action-icon text-green">+</span>
+                    Ingreso
+                </button>
+                <button id="btn-add-expense" class="btn-action glass-btn">
+                    <span class="action-icon text-red">-</span>
+                    Gasto
+                </button>
+            </div>
+            
+        
+
+            <div class="history-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin-bottom: 0;">Últimos Movimientos</h3>
+                    
+                    <!-- Barra de Filtros -->
+                    <div style="display: flex; gap: 8px;">
+                        <select id="filter-mes" class="glass-select" style="padding: 8px; font-size: 0.85rem; width: auto;">
+                            <option value="">Mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                        <select id="filter-anio" class="glass-select" style="padding: 8px; font-size: 0.85rem; width: auto;">
+                            <option value="">Año</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="history-list" class="history-list">
+                    <!-- Los movimientos se inyectarán aquí con JS -->
+                    <div class="empty-state">No hay movimientos recientes</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANTALLA NUEVO MOVIMIENTO ================= -->
+        <section id="view-add-movement" class="view">
+            <header class="app-header">
+                <button id="btn-back-dashboard" class="btn-icon">← Volver</button>
+                <h3 id="add-mov-title">Nuevo Movimiento</h3>
+                <div style="width: 24px;"></div> <!-- Spacer -->
+            </header>
+
+            <div class="glass-card">
+                <form id="form-movement">
+                    <!-- Ocultamos el tipo para mandarlo por código -->
+                    <input type="hidden" id="mov-tipo" value="gasto">
+                    
+                    <div class="input-group">
+                        <label for="mov-monto">Monto (Q)</label>
+                        <input type="number" id="mov-monto" step="0.01" min="0.01" required placeholder="0.00">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="mov-categoria">Categoría</label>
+                        <select id="mov-categoria" required class="glass-select">
+                            <option value="">Cargando categorías...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mov-desc">Descripción (Opcional)</label>
+                        <input type="text" id="mov-desc" placeholder="Ej. Uber a la U">
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btn-submit-mov">Guardar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= PANTALLA REPORTES (CU-05) ================= -->
+        <section id="view-reports" class="view">
+            <header class="app-header">
+                <button id="btn-back-from-reports" class="btn-icon">← Volver</button>
+                <h3 style="font-size: 1.5rem; font-family: 'Georgia', serif;">Reportes</h3>
+                <div style="width: 24px;"></div>
+            </header>
+
+            <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+                <div style="position: relative; width: 220px; height: 220px;">
+                    <!-- Aquí dibuja Chart.js -->
+                    <canvas id="gastosChart"></canvas>
+                    
+                    <!-- Texto flotante en el centro -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
+                        <small style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">TOTAL</small>
+                        <strong id="chart-total-text" style="font-size: 1.6rem; font-family: 'Georgia', serif; color: var(--text-main);">Q 0.00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="font-size: 1.1rem;">Mayores Gastos</h3>
+                    <span style="background: var(--accent-primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">GASTOS</span>
+                </div>
+                <!-- Lista de mayores gastos (Barras) -->
+                <div id="mayores-gastos-list"></div>
+            </div>
+
+        
+        </section>
+
+        <!-- ================= PANTALLA DE CATEGORÍAS ================= -->
+        <section id="view-categories" class="view">
+            <header class="app-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                <small style="color: var(--accent-primary); font-weight: 700; font-size: 0.7rem; letter-spacing: 1px;">PERSONALIZA TUS FINANZAS</small>
+                <h3 style="font-size: 2rem; font-family: 'Georgia', serif; color: var(--text-main);">Categorías</h3>
+            </header>
+
+            <!-- Buscador visual (como el mockup) -->
+            <div class="input-group">
+                <input type="text" placeholder="🔍 Buscar categorías..." style="border-radius: 20px; background: white; border: 1px solid var(--border-light);">
+            </div>
+
+            <div style="margin-top: 24px;">
+                <h4 style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-bottom: 16px;">Fuentes de Ingresos</h4>
+                <div id="categorias-ingreso-list"></div>
+                
+                <h4 style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-top: 24px; margin-bottom: 16px;">Tipos de Gastos</h4>
+                <div id="categorias-gasto-list"></div>
+            </div>
+
+            <!-- Botón Grande de Añadir -->
+            <div style="margin-top: 32px; padding-bottom: 24px; display: flex; justify-content: center;">
+                <button id="btn-show-add-category" class="btn-primary" style="border-radius: 24px; box-shadow: 0 10px 20px rgba(123, 75, 179, 0.3); max-width: 250px;">
+                    + AÑADIR CATEGORÍA
+                </button>
+            </div>
+
+        
+        </section>
+
+        <!-- ================= HISTORIAL DE UNA CATEGORÍA ================= -->
+        <section id="view-category-history" class="view">
+            <header class="app-header">
+                <button onclick="showView('view-categories')" class="btn-icon">← Volver</button>
+                <h3 id="cat-history-title" style="font-size: 1.5rem; font-family: 'Georgia', serif;">Historial</h3>
+                <div style="width: 24px;"></div>
+            </header>
+
+            <div class="history-section" style="margin-top: 16px;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-main);">Detalle de Movimientos</h3>
+                <div id="cat-history-list" class="history-list">
+                    <!-- Se llenará dinámicamente -->
+                    <div class="empty-state">Cargando...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FORMULARIO AÑADIR CATEGORÍA ================= -->
+        <section id="view-add-category" class="view">
+            <header class="app-header">
+                <button id="btn-cancel-category" class="btn-icon">← Cancelar</button>
+                <h3>Nueva Categoría</h3>
+                <div style="width: 24px;"></div>
+            </header>
+
+            <div class="glass-card">
+                <form id="form-category">
+                    <div class="input-group">
+                        <label>Nombre de la Categoría</label>
+                        <input type="text" id="cat-nombre" required placeholder="Ej. Freelance, Netflix, Ropa">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Tipo</label>
+                        <select id="cat-tipo" class="glass-select" required>
+                            <option value="ingreso">Ingreso (Entrada de dinero)</option>
+                            <option value="gasto">Gasto (Salida de dinero)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btn-submit-cat">Guardar Categoría</button>
+                </form>
+            </div>
+        </section>
+
+    <!-- BARRA DE NAVEGACIÓN GLOBAL (COMPONENTE) -->
+    <nav id="main-navbar" class="bottom-nav">
+        <button id="nav-btn-dashboard" class="nav-btn" onclick="showView('view-dashboard')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+            <span>INICIO</span>
+        </button>
+        <button id="nav-btn-reports" class="nav-btn" onclick="showView('view-reports'); window.dashboardController.loadReport();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"></rect><rect x="10" y="8" width="4" height="13"></rect><rect x="2" y="13" width="4" height="8"></rect></svg>
+            <span>REPORTES</span>
+        </button>
+        <button id="nav-btn-categories" class="nav-btn" onclick="showView('view-categories'); window.categoriasController.loadData();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>CATEGORÍAS</span>
+        </button>
+    </nav>
+    
+    </div>
+
+    <!-- Scripts de Lógica -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/controllers/auth.js"></script>
+    <script src="/static/js/controllers/dashboard.js"></script>
+    <script src="/static/js/controllers/movimientos.js"></script>
+    <script src="/static/js/controllers/categorias.js"></script>
+</body>
+</html>

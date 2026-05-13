@@ -1,0 +1,370 @@
+/* ==========================================================================
+   Variables y Paleta de Colores (Basado en el Mockup)
+   ========================================================================== */
+:root {
+    --bg-app: #F8F9FD;
+    --bg-card: #FFFFFF;
+    
+    --accent-primary: #7B4BB3; /* Morado del logo y botones */
+    --accent-primary-hover: #6a3d9e;
+    --accent-light: #F3E8FF; /* Fondo suave para íconos */
+    
+    --success: #2ECC71; /* Verde Ingresos */
+    --danger: #FF5C5C;  /* Rojo Gastos */
+    
+    --text-main: #1E1E1E;
+    --text-muted: #8E8E93;
+    --border-light: #E5E5EA;
+    
+    --font-main: 'Inter', sans-serif;
+    --radius-app: 32px;
+    --radius-card: 16px;
+}
+
+/* ==========================================================================
+   Reseteo Básico
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: #E2E8F0; /* Fondo gris oscuro de escritorio */
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==========================================================================
+   Simulador de Teléfono Móvil
+   ========================================================================== */
+#app-container {
+    width: 100%;
+    max-width: 400px; /* Ancho típico de un celular */
+    height: 100vh;
+    max-height: 850px;
+    background-color: var(--bg-app);
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+    /* Si lo abren en PC, parecerá un teléfono */
+    @media (min-width: 450px) {
+        height: 85vh;
+        border-radius: var(--radius-app);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+        border: 8px solid #FFFFFF;
+    }
+}
+
+/* ==========================================================================
+   Sistema de Vistas (SPA)
+   ========================================================================== */
+.view {
+    display: none;
+    padding: 24px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.view.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Componentes Globales (Estilo Material / Clean)
+   ========================================================================== */
+.glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-card);
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.text-green { color: var(--success); }
+.text-red { color: var(--danger); }
+.text-primary { color: var(--accent-primary); }
+
+/* Botones */
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px 0 rgba(123, 75, 179, 0.39);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-primary-hover);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+/* Formularios */
+.input-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.input-group input, .glass-select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #F4F4F5;
+    border: 1px solid transparent;
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    font-family: var(--font-main);
+}
+
+.input-group input:focus, .glass-select:focus {
+    border-color: var(--accent-primary);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(123, 75, 179, 0.1);
+}
+
+.glass-select {
+    appearance: none;
+}
+
+/* ==========================================================================
+   Pantallas de Login / Registro
+   ========================================================================== */
+.login-box {
+    margin-top: 15vh;
+    text-align: center;
+}
+
+.logo-circle {
+    font-size: 2.5rem;
+    width: 70px;
+    height: 70px;
+    background: var(--accent-light);
+    color: var(--accent-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.login-box h1 { margin-bottom: 8px; font-weight: 700; color: var(--text-main); }
+.login-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 0.9rem;}
+
+.switch-view {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.switch-view a { color: var(--accent-primary); text-decoration: none; font-weight: 600;}
+
+/* ==========================================================================
+   Pantalla Dashboard
+   ========================================================================== */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.user-info { display: flex; align-items: center; gap: 12px; }
+.avatar {
+    width: 45px; height: 45px;
+    background: var(--accent-light);
+    color: var(--accent-primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.greeting { display: block; font-size: 0.75rem; color: var(--text-muted); }
+.user-info strong { color: var(--text-main); font-size: 1.1rem; }
+
+.btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+
+/* Tarjeta Principal */
+.balance-card { text-align: center; margin-bottom: 24px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+.balance-card h3 { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px;}
+.balance-card h1 { font-size: 2.8rem; margin-bottom: 24px; font-weight: 700; color: var(--accent-primary);}
+
+.balance-row {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-light);
+    padding-top: 16px;
+}
+.balance-col { display: flex; align-items: center; gap: 12px; text-align: left;}
+.balance-col small { color: var(--text-muted); font-weight: 500; }
+.balance-col strong { font-size: 1.1rem; display: block; margin-top: 2px;}
+
+.icon-up { background: rgba(46, 204, 113, 0.1); color: var(--success); padding: 8px; border-radius: 50%; font-weight: bold; }
+.icon-down { background: rgba(255, 92, 92, 0.1); color: var(--danger); padding: 8px; border-radius: 50%; font-weight: bold; }
+
+/* Botones de Acción Rápida */
+.actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.btn-action {
+    background: var(--bg-card);
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-card);
+    color: var(--text-main);
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s;
+}
+.btn-action:active { transform: scale(0.95); }
+.action-icon { 
+    font-size: 1.5rem; 
+    font-weight: bold; 
+    width: 40px; height: 40px; 
+    display: flex; align-items: center; justify-content: center; 
+    border-radius: 50%; 
+}
+#btn-add-income .action-icon { background: rgba(46, 204, 113, 0.1); }
+#btn-add-expense .action-icon { background: rgba(255, 92, 92, 0.1); }
+
+/* Lista de Historial */
+.history-section h3 { font-size: 1.1rem; margin-bottom: 16px; color: var(--text-main); font-weight: 600;}
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.history-item-left h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text-main); font-weight: 600; }
+.history-item-left small { font-size: 0.8rem; color: var(--text-muted); }
+.history-item-right { font-weight: 700; font-size: 1.1rem;}
+
+/* Barra de Navegación Inferior Global */
+.bottom-nav {
+    position: sticky; 
+    bottom: 20px; 
+    margin-top: 24px; 
+    background: white; 
+    padding: 8px; 
+    border-radius: 30px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+    display: none; /* Se muestra por JS solo si estás logueado */
+    justify-content: space-around; 
+    align-items: center; 
+    z-index: 10;
+}
+
+.nav-btn {
+    background: none; 
+    color: var(--text-muted); 
+    border: none; 
+    padding: 10px 20px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.nav-btn span {
+    font-size: 0.6rem; 
+    margin-top: 4px; 
+    font-weight: bold;
+}
+
+.nav-btn.active {
+    background: var(--accent-light); 
+    color: var(--accent-primary); 
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 30px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px dashed var(--border-light);
+}
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.toast {
+    background: #333;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    animation: slideDown 0.3s forwards, fadeOut 0.3s forwards 3.5s;
+    opacity: 0;
+    text-align: center;
+}
+
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.info { background: var(--accent-primary); }
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; visibility: hidden; }
+}

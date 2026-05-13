@@ -1,0 +1,9 @@
+{
+  "include": ["."],
+  "exclude": ["venv"],
+  "pythonVersion": "3.13",
+  "pythonPlatform": "Darwin",
+  "venvPath": ".",
+  "venv": "venv",
+  "reportMissingImports": false
+}

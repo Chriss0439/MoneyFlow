@@ -1,0 +1,29 @@
+# Entornos virtuales
+backend/venv/
+venv/
+env/
+.env
+
+# Base de datos local
+backend/moneyflow.db
+moneyflow.db
+*.sqlite3
+
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Archivos del sistema operativo (Mac/Windows)
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Documentos internos
+*.docx
+*.doc
+*.pdf
