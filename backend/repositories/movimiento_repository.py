@@ -76,6 +76,34 @@ class MovimientoRepository:
             
         return totales
 
+    def obtener_dependencia_familiar(self, user_id: int) -> dict:
+        """
+        Calcula el desglose de ingresos por origen: apoyo familiar vs ingresos propios.
+        Usa el campo es_apoyo_familiar del movimiento para distinguirlos.
+
+        SQL equivalente:
+        SELECT es_apoyo_familiar, SUM(monto) FROM movimientos m
+        JOIN categorias c ON m.categoria_id = c.id
+        WHERE m.user_id = ? AND c.tipo = 'ingreso'
+        GROUP BY es_apoyo_familiar
+        """
+        resultados = self.db.query(
+            Movimiento.es_apoyo_familiar,
+            func.sum(Movimiento.monto).label('total')
+        ).join(Categoria).filter(
+            Movimiento.user_id == user_id,
+            Categoria.tipo == 'ingreso'
+        ).group_by(Movimiento.es_apoyo_familiar).all()
+
+        desglose = {"apoyo_familiar": 0.0, "ingresos_propios": 0.0}
+        for es_apoyo, total in resultados:
+            if es_apoyo:
+                desglose["apoyo_familiar"] = total or 0.0
+            else:
+                desglose["ingresos_propios"] = total or 0.0
+
+        return desglose
+
     def obtener_gastos_por_categoria(self, user_id: int) -> list[dict]:
         """
         Agrupa los gastos del usuario por nombre de categoría para la gráfica.

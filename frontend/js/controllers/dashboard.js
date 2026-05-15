@@ -26,6 +26,35 @@ window.dashboardController = {
             document.getElementById('balance-ingresos').textContent = this.formatMoney(dashboard.total_ingresos);
             document.getElementById('balance-gastos').textContent = this.formatMoney(dashboard.total_gastos);
 
+            // --- Independencia Financiera ---
+            const pctDep  = dashboard.pct_dependencia ?? 0;
+            const pctProp = dashboard.pct_propios ?? 0;
+
+            document.getElementById('bar-dependencia').style.width  = pctDep + '%';
+            document.getElementById('bar-propios').style.width       = pctProp + '%';
+            document.getElementById('lbl-pct-dependencia').textContent = pctDep + '%';
+            document.getElementById('lbl-pct-propios').textContent     = pctProp + '%';
+            document.getElementById('lbl-monto-apoyo').textContent     = this.formatMoney(dashboard.apoyo_familiar ?? 0);
+            document.getElementById('lbl-monto-propios').textContent   = this.formatMoney(dashboard.ingresos_propios ?? 0);
+
+            // Badge dinámico según nivel de independencia
+            const badge = document.getElementById('badge-independencia');
+            if (dashboard.total_ingresos === 0) {
+                badge.textContent = 'Sin datos';
+            } else if (pctProp >= 60) {
+                badge.textContent = '🌱 Alta independencia';
+                badge.style.background = '#d1fae5';
+                badge.style.color = '#065f46';
+            } else if (pctProp >= 30) {
+                badge.textContent = '⚡ En progreso';
+                badge.style.background = '#fef3c7';
+                badge.style.color = '#92400e';
+            } else {
+                badge.textContent = '🏠 Alta dependencia';
+                badge.style.background = '#fee2e2';
+                badge.style.color = '#991b1b';
+            }
+
             // Historial (Pasando filtros)
             const historial = await api.getHistorial(mesVal || null, anioVal || null);
             const historyList = document.getElementById('history-list');
