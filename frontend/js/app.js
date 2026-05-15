@@ -12,17 +12,18 @@ window.showView = function(viewId) {
     // Gestión de la Barra de Navegación Global (Componente)
     const navbar = document.getElementById('main-navbar');
     
-    // Solo mostrar la barra en estas tres pantallas principales
-    if (['view-dashboard', 'view-reports', 'view-categories'].includes(viewId)) {
+    // Solo mostrar la barra en estas cuatro pantallas principales
+    if (['view-dashboard', 'view-reports', 'view-categories', 'view-presupuestos'].includes(viewId)) {
         navbar.style.display = 'flex';
-        
+
         // Quitar la clase active a todos los botones
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        
+
         // Asignar active al botón correspondiente
         if (viewId === 'view-dashboard') document.getElementById('nav-btn-dashboard').classList.add('active');
         if (viewId === 'view-reports') document.getElementById('nav-btn-reports').classList.add('active');
         if (viewId === 'view-categories') document.getElementById('nav-btn-categories').classList.add('active');
+        if (viewId === 'view-presupuestos') document.getElementById('nav-btn-presupuestos').classList.add('active');
         
     } else {
         // Ocultar la barra si estamos en Login, Historial de Categoría, o Agregar Movimiento
@@ -61,6 +62,10 @@ window.initApp = async function() {
         // Llamamos al controlador del dashboard
         if (window.dashboardController) {
             await window.dashboardController.loadData();
+        }
+        // Cargar alertas de presupuesto en el banner
+        if (window.presupuestosController) {
+            window.presupuestosController.cargarAlertas();
         }
     } else {
         showView('view-login');

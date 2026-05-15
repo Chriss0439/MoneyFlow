@@ -12,6 +12,7 @@ from routes.categorias import router as categorias_router
 from routes.movimientos import router as movimientos_router
 from routes.dashboard import router as dashboard_router
 from routes.reportes import router as reportes_router
+from routes.presupuestos import router as presupuestos_router
 
 # ─── Inicializar la app ─────────────────────────────────────────────────────────
 app = FastAPI(
@@ -35,6 +36,7 @@ app.include_router(categorias_router)
 app.include_router(movimientos_router)
 app.include_router(dashboard_router)
 app.include_router(reportes_router)
+app.include_router(presupuestos_router)
 
 # app.include_router(categorias_router)
 # app.include_router(reportes_router)

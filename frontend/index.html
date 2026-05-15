@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,10 +11,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
     <!-- Este div simula la pantalla del teléfono -->
     <div id="app-container">
-        
+
         <!-- ================= PANTALLA DE LOGIN ================= -->
         <section id="view-login" class="view active">
             <div class="glass-card login-box">
@@ -22,7 +24,7 @@
                     <h1>MoneyFlow</h1>
                     <p>Tus finanzas, bajo control.</p>
                 </div>
-                
+
                 <form id="login-form">
                     <div class="input-group">
                         <label for="login-email">Correo Universitario</label>
@@ -76,7 +78,8 @@
                     </div>
                 </div>
                 <button id="btn-logout" class="btn-icon" title="Cerrar sesión">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                         <line x1="12" y1="2" x2="12" y2="12"></line>
                     </svg>
@@ -86,7 +89,7 @@
             <div class="glass-card balance-card">
                 <h3>Saldo Actual</h3>
                 <h1 id="balance-total">Q 0.00</h1>
-                
+
                 <div class="balance-row">
                     <div class="balance-col">
                         <span class="icon-up">↗</span>
@@ -105,21 +108,28 @@
                 </div>
             </div>
 
+            <!-- BANNER DE ALERTAS DE PRESUPUESTO -->
+            <div id="banner-alertas" style="display:none; margin-top: 12px; padding: 0 4px;"></div>
+
             <!-- TARJETA DE INDEPENDENCIA FINANCIERA -->
             <div class="glass-card" id="card-independencia" style="margin-top: 16px; padding: 18px 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                     <h3 style="margin: 0; font-size: 0.95rem; color: var(--text-main);">Independencia Financiera</h3>
-                    <span id="badge-independencia" style="font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--accent-light, #ede9fe); color: var(--accent-primary, #7b4fb3);">—</span>
+                    <span id="badge-independencia"
+                        style="font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--accent-light, #ede9fe); color: var(--accent-primary, #7b4fb3);">—</span>
                 </div>
 
                 <!-- Barra: Apoyo Familiar -->
                 <div style="margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <small style="color: var(--text-muted); font-size: 0.78rem;">🏠 Apoyo familiar</small>
-                        <small id="lbl-pct-dependencia" style="font-weight: 600; font-size: 0.78rem; color: var(--text-main);">0%</small>
+                        <small id="lbl-pct-dependencia"
+                            style="font-weight: 600; font-size: 0.78rem; color: var(--text-main);">0%</small>
                     </div>
                     <div style="width: 100%; height: 8px; background: #F4F4F5; border-radius: 4px; overflow: hidden;">
-                        <div id="bar-dependencia" style="height: 100%; width: 0%; background: #FFB3B3; border-radius: 4px; transition: width 0.6s ease;"></div>
+                        <div id="bar-dependencia"
+                            style="height: 100%; width: 0%; background: #FFB3B3; border-radius: 4px; transition: width 0.6s ease;">
+                        </div>
                     </div>
                     <small id="lbl-monto-apoyo" style="color: var(--text-muted); font-size: 0.72rem;">Q 0.00</small>
                 </div>
@@ -128,10 +138,13 @@
                 <div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <small style="color: var(--text-muted); font-size: 0.78rem;">💼 Ingresos propios</small>
-                        <small id="lbl-pct-propios" style="font-weight: 600; font-size: 0.78rem; color: var(--text-main);">0%</small>
+                        <small id="lbl-pct-propios"
+                            style="font-weight: 600; font-size: 0.78rem; color: var(--text-main);">0%</small>
                     </div>
                     <div style="width: 100%; height: 8px; background: #F4F4F5; border-radius: 4px; overflow: hidden;">
-                        <div id="bar-propios" style="height: 100%; width: 0%; background: #B3FFD1; border-radius: 4px; transition: width 0.6s ease;"></div>
+                        <div id="bar-propios"
+                            style="height: 100%; width: 0%; background: #B3FFD1; border-radius: 4px; transition: width 0.6s ease;">
+                        </div>
                     </div>
                     <small id="lbl-monto-propios" style="color: var(--text-muted); font-size: 0.72rem;">Q 0.00</small>
                 </div>
@@ -147,16 +160,17 @@
                     Gasto
                 </button>
             </div>
-            
-        
+
+
 
             <div class="history-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="margin-bottom: 0;">Últimos Movimientos</h3>
-                    
+
                     <!-- Barra de Filtros -->
                     <div style="display: flex; gap: 8px;">
-                        <select id="filter-mes" class="glass-select" style="padding: 8px; font-size: 0.85rem; width: auto;">
+                        <select id="filter-mes" class="glass-select"
+                            style="padding: 8px; font-size: 0.85rem; width: auto;">
                             <option value="">Mes</option>
                             <option value="1">Enero</option>
                             <option value="2">Febrero</option>
@@ -171,7 +185,8 @@
                             <option value="11">Noviembre</option>
                             <option value="12">Diciembre</option>
                         </select>
-                        <select id="filter-anio" class="glass-select" style="padding: 8px; font-size: 0.85rem; width: auto;">
+                        <select id="filter-anio" class="glass-select"
+                            style="padding: 8px; font-size: 0.85rem; width: auto;">
                             <option value="">Año</option>
                             <option value="2025">2025</option>
                             <option value="2026">2026</option>
@@ -199,12 +214,12 @@
                 <form id="form-movement">
                     <!-- Ocultamos el tipo para mandarlo por código -->
                     <input type="hidden" id="mov-tipo" value="gasto">
-                    
+
                     <div class="input-group">
                         <label for="mov-monto">Monto (Q)</label>
                         <input type="number" id="mov-monto" step="0.01" min="0.01" required placeholder="0.00">
                     </div>
-                    
+
                     <div class="input-group">
                         <label for="mov-categoria">Categoría</label>
                         <select id="mov-categoria" required class="glass-select">
@@ -234,11 +249,15 @@
                 <div style="position: relative; width: 220px; height: 220px;">
                     <!-- Aquí dibuja Chart.js -->
                     <canvas id="gastosChart"></canvas>
-                    
+
                     <!-- Texto flotante en el centro -->
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
-                        <small style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">TOTAL</small>
-                        <strong id="chart-total-text" style="font-size: 1.6rem; font-family: 'Georgia', serif; color: var(--text-main);">Q 0.00</strong>
+                    <div
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
+                        <small
+                            style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600; letter-spacing: 1px;">TOTAL</small>
+                        <strong id="chart-total-text"
+                            style="font-size: 1.6rem; font-family: 'Georgia', serif; color: var(--text-main);">Q
+                            0.00</strong>
                     </div>
                 </div>
             </div>
@@ -246,43 +265,116 @@
             <div class="history-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <h3 style="font-size: 1.1rem;">Mayores Gastos</h3>
-                    <span style="background: var(--accent-primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">GASTOS</span>
+                    <span
+                        style="background: var(--accent-primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">GASTOS</span>
                 </div>
                 <!-- Lista de mayores gastos (Barras) -->
                 <div id="mayores-gastos-list"></div>
             </div>
 
-        
+
+        </section>
+
+        <!-- ================= PANTALLA DE PRESUPUESTOS ================= -->
+        <section id="view-presupuestos" class="view">
+            <header class="app-header">
+                <button id="btn-back-from-presupuestos" class="btn-icon">← Volver</button>
+                <h3 style="font-size: 1.4rem; font-family: 'Georgia', serif;">Presupuestos</h3>
+                <div style="width: 24px;"></div>
+            </header>
+
+            <!-- Formulario para nuevo presupuesto -->
+            <div class="glass-card" style="margin-bottom: 20px;">
+                <h4 style="margin: 0 0 14px; font-size: 0.95rem; color: var(--text-main);">Definir límite de gasto</h4>
+                <form id="form-presupuesto">
+                    <div class="input-group">
+                        <label>Categoría de gasto</label>
+                        <select id="presup-categoria" class="glass-select" required>
+                            <option value="">Cargando...</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Límite mensual (Q)</label>
+                        <input type="number" id="presup-limite" step="0.01" min="1" required placeholder="Ej. 500.00">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="input-group">
+                            <label>Mes (opcional)</label>
+                            <select id="presup-mes" class="glass-select">
+                                <option value="">Todos</option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Año (opcional)</label>
+                            <select id="presup-anio" class="glass-select">
+                                <option value="">Todos</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Guardar presupuesto</button>
+                </form>
+            </div>
+
+            <!-- Lista de presupuestos activos -->
+            <div class="history-section">
+                <h3 style="font-size: 1rem; margin-bottom: 14px;">Presupuestos activos</h3>
+                <div id="presup-list">
+                    <div class="empty-state">Cargando...</div>
+                </div>
+            </div>
         </section>
 
         <!-- ================= PANTALLA DE CATEGORÍAS ================= -->
         <section id="view-categories" class="view">
             <header class="app-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                <small style="color: var(--accent-primary); font-weight: 700; font-size: 0.7rem; letter-spacing: 1px;">PERSONALIZA TUS FINANZAS</small>
+                <small
+                    style="color: var(--accent-primary); font-weight: 700; font-size: 0.7rem; letter-spacing: 1px;">PERSONALIZA
+                    TUS FINANZAS</small>
                 <h3 style="font-size: 2rem; font-family: 'Georgia', serif; color: var(--text-main);">Categorías</h3>
             </header>
 
             <!-- Buscador visual (como el mockup) -->
             <div class="input-group">
-                <input id="input-search-categorias" type="text" placeholder="🔍 Buscar categorías..." style="border-radius: 20px; background: white; border: 1px solid var(--border-light);">
+                <input id="input-search-categorias" type="text" placeholder="🔍 Buscar categorías..."
+                    style="border-radius: 20px; background: white; border: 1px solid var(--border-light);">
             </div>
 
             <div style="margin-top: 24px;">
-                <h4 id="section-header-ingresos" style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-bottom: 16px;">Fuentes de Ingresos</h4>
+                <h4 id="section-header-ingresos"
+                    style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-bottom: 16px;">
+                    Fuentes de Ingresos</h4>
                 <div id="categorias-ingreso-list"></div>
 
-                <h4 id="section-header-gastos" style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-top: 24px; margin-bottom: 16px;">Tipos de Gastos</h4>
+                <h4 id="section-header-gastos"
+                    style="font-family: 'Georgia', serif; font-size: 1.2rem; font-style: italic; margin-top: 24px; margin-bottom: 16px;">
+                    Tipos de Gastos</h4>
                 <div id="categorias-gasto-list"></div>
             </div>
 
             <!-- Botón Grande de Añadir -->
             <div style="margin-top: 32px; padding-bottom: 24px; display: flex; justify-content: center;">
-                <button id="btn-show-add-category" class="btn-primary" style="border-radius: 24px; box-shadow: 0 10px 20px rgba(123, 75, 179, 0.3); max-width: 250px;">
+                <button id="btn-show-add-category" class="btn-primary"
+                    style="border-radius: 24px; box-shadow: 0 10px 20px rgba(123, 75, 179, 0.3); max-width: 250px;">
                     + AÑADIR CATEGORÍA
                 </button>
             </div>
 
-        
+
         </section>
 
         <!-- ================= HISTORIAL DE UNA CATEGORÍA ================= -->
@@ -316,7 +408,7 @@
                         <label>Nombre de la Categoría</label>
                         <input type="text" id="cat-nombre" required placeholder="Ej. Freelance, Netflix, Ropa">
                     </div>
-                    
+
                     <div class="input-group">
                         <label>Tipo</label>
                         <select id="cat-tipo" class="glass-select" required>
@@ -330,22 +422,43 @@
             </div>
         </section>
 
-    <!-- BARRA DE NAVEGACIÓN GLOBAL (COMPONENTE) -->
-    <nav id="main-navbar" class="bottom-nav">
-        <button id="nav-btn-dashboard" class="nav-btn" onclick="showView('view-dashboard')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-            <span>INICIO</span>
-        </button>
-        <button id="nav-btn-reports" class="nav-btn" onclick="showView('view-reports'); window.dashboardController.loadReport();">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"></rect><rect x="10" y="8" width="4" height="13"></rect><rect x="2" y="13" width="4" height="8"></rect></svg>
-            <span>REPORTES</span>
-        </button>
-        <button id="nav-btn-categories" class="nav-btn" onclick="showView('view-categories'); window.categoriasController.loadData();">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            <span>CATEGORÍAS</span>
-        </button>
-    </nav>
-    
+        <!-- BARRA DE NAVEGACIÓN GLOBAL (COMPONENTE) -->
+        <nav id="main-navbar" class="bottom-nav">
+            <button id="nav-btn-dashboard" class="nav-btn" onclick="showView('view-dashboard')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                </svg>
+                <span>INICIO</span>
+            </button>
+            <button id="nav-btn-reports" class="nav-btn"
+                onclick="showView('view-reports'); window.dashboardController.loadReport();">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="18" y="3" width="4" height="18"></rect>
+                    <rect x="10" y="8" width="4" height="13"></rect>
+                    <rect x="2" y="13" width="4" height="8"></rect>
+                </svg>
+                <span>REPORTES</span>
+            </button>
+            <button id="nav-btn-categories" class="nav-btn"
+                onclick="showView('view-categories'); window.categoriasController.loadData();">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>CATEGORÍAS</span>
+            </button>
+            <button id="nav-btn-presupuestos" class="nav-btn"
+                onclick="showView('view-presupuestos'); window.presupuestosController.loadData();">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <span>PRESUPUESTOS</span>
+            </button>
+        </nav>
+
     </div>
 
     <!-- Scripts de Lógica -->
@@ -355,5 +468,7 @@
     <script src="/static/js/controllers/dashboard.js"></script>
     <script src="/static/js/controllers/movimientos.js"></script>
     <script src="/static/js/controllers/categorias.js"></script>
+    <script src="/static/js/controllers/presupuestos.js"></script>
 </body>
+
 </html>

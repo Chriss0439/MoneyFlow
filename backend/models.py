@@ -48,3 +48,17 @@ class Movimiento(Base):
     # Relaciones inversas
     user = relationship("User", back_populates="movimientos")
     categoria = relationship("Categoria", back_populates="movimientos")
+
+
+class Presupuesto(Base):
+    __tablename__ = "presupuestos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    categoria_id = Column(Integer, ForeignKey("categorias.id", ondelete="CASCADE"), nullable=False)
+    limite = Column(Float, nullable=False)   # Límite de gasto mensual en Q
+    mes = Column(Integer, nullable=True)     # 1-12; NULL = aplica a todos los meses
+    anio = Column(Integer, nullable=True)    # NULL = aplica a todos los años
+
+    user = relationship("User")
+    categoria = relationship("Categoria")

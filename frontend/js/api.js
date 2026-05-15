@@ -100,5 +100,21 @@ const api = {
         
     // Reportes (CU-05)
     getReporteGastos: () =>
-        api.request("/reportes/gastos-por-categoria", { method: "GET" })
+        api.request("/reportes/gastos-por-categoria", { method: "GET" }),
+
+    // Presupuestos
+    getPresupuestos: () =>
+        api.request("/presupuestos/", { method: "GET" }),
+
+    crearPresupuesto: (data) =>
+        api.request("/presupuestos/", {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+
+    eliminarPresupuesto: (id) =>
+        api.request(`/presupuestos/${id}`, { method: "DELETE" }),
+
+    getAlertasPresupuesto: () =>
+        api.request("/presupuestos/alertas", { method: "GET" }),
 };
