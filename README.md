@@ -1,6 +1,6 @@
 # MoneyFlow 💸
 
-Una aplicación web mobile-first para la gestión de finanzas personales. Permite registrar ingresos, gastos, gestionar categorías y visualizar reportes interactivos.
+Una aplicación web mobile-first para la gestión de finanzas personales. Permite registrar ingresos y gastos, gestionar categorías, definir presupuestos con alertas automáticas y visualizar reportes interactivos junto con métricas de independencia financiera.
 
 ## 🛠️ Tecnologías
 *   **Backend:** Python 3 + FastAPI
@@ -59,7 +59,7 @@ Ingresa a [http://localhost:8000](http://localhost:8000) en tu navegador Chrome 
 ---
 
 ## 💾 Sobre la Base de Datos
-La primera vez que levantes el servidor, la aplicación detectará que no tienes base de datos y automáticamente creará el archivo `moneyflow.db` con todas las tablas necesarias (`users`, `categorias` y `movimientos`).
+La primera vez que levantes el servidor, la aplicación detectará que no tienes base de datos y automáticamente creará el archivo `moneyflow.db` con todas las tablas necesarias (`users`, `categorias`, `movimientos` y `presupuestos`).
 
 Si deseas que la base de datos tenga las **categorías predeterminadas** ya listas para usar:
 1. Con el entorno virtual activado, corre el script de poblamiento:

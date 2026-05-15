@@ -38,12 +38,14 @@ graph TD
 
 ## 2. Modelo de Datos (Diagrama Entidad-Relación)
 
-La base de datos utiliza **SQLite** y es administrada a través del ORM SQLAlchemy. Se compone de 3 tablas principales fuertemente tipadas y relacionadas entre sí.
+La base de datos utiliza **SQLite** y es administrada a través del ORM SQLAlchemy. Se compone de 4 tablas fuertemente tipadas y relacionadas entre sí.
 
 ```mermaid
 erDiagram
     USERS ||--o{ MOVIMIENTOS : registra
+    USERS ||--o{ PRESUPUESTOS : define
     CATEGORIAS ||--o{ MOVIMIENTOS : clasifica
+    CATEGORIAS ||--o{ PRESUPUESTOS : limita
 
     USERS {
         int id PK
@@ -68,6 +70,15 @@ erDiagram
         date fecha
         boolean es_apoyo_familiar
     }
+
+    PRESUPUESTOS {
+        int id PK
+        int user_id FK
+        int categoria_id FK
+        float limite
+        int mes "nullable"
+        int anio "nullable"
+    }
 ```
 
 ---
@@ -87,11 +98,16 @@ El backend sigue una arquitectura limpia en capas para separar responsabilidades
    * Emplea hashing `bcrypt` para las contraseñas.
    * Genera y valida tokens `JWT` (JSON Web Tokens) para mantener la sesión abierta de manera segura sin estado (stateless).
 2. **Dashboard (`dashboard`):**
-   * Agrega matemáticamente los datos del usuario para mostrar su saldo real actual, sumando ingresos y restando gastos.
+   * Agrega matemáticamente los datos del usuario para calcular saldo actual (ingresos − gastos).
+   * Calcula métricas de **independencia financiera**: desglose de ingresos propios vs. apoyo familiar usando el campo `es_apoyo_familiar` de cada movimiento, retornando montos y porcentajes listos para graficar.
 3. **Movimientos (`movimientos`):**
    * Núcleo del sistema. Implementa el CRUD (Crear, Leer, Eliminar) para el flujo de dinero, incluyendo el filtrado avanzado por fecha o categoría.
 4. **Reportes (`reportes`):**
    * Realiza agrupaciones (GROUP BY) en base de datos para sumar el total gastado en cada categoría y alimentar los gráficos de Chart.js.
+5. **Presupuestos (`presupuestos`):**
+   * Permite al usuario definir límites de gasto mensuales por categoría (opcionalmente acotados a un mes y año específicos).
+   * Calcula en tiempo real el gasto acumulado frente al límite y determina el estado: `ok` (< 75%), `advertencia` (≥ 75%) o `excedido` (≥ 100%).
+   * Expone el endpoint `GET /presupuestos/alertas` usado por el dashboard para mostrar el banner de alertas automáticamente al iniciar sesión.
 
 ---
 
@@ -107,9 +123,10 @@ Se omitió el uso de frameworks complejos en favor de un enfoque ligero basado e
 ### 4.2. Controladores de Dominio (`controllers/`)
 Cada vista tiene un archivo JS que asocia los eventos (`addEventListener`) a la interfaz:
 * `auth.js`: Recolecta el form, llama a `api.login()` o `api.register()` y guarda el token en `localStorage`.
-* `dashboard.js`: Lee los resúmenes, pinta las tarjetas y dibuja el gráfico de torta de Chart.js usando un Canvas HTML5.
+* `dashboard.js`: Lee los resúmenes, pinta las tarjetas de balance e independencia financiera (barras de % apoyo familiar vs. ingresos propios) y carga el historial de movimientos.
 * `movimientos.js`: Dinamiza el `select` de categorías basado en si seleccionaste un gasto o un ingreso.
 * `categorias.js`: Lista visualmente las fuentes de ingreso y tipos de gastos.
+* `presupuestos.js`: Gestiona el CRUD de presupuestos, renderiza las barras de progreso con estado de color (verde/amarillo/rojo) y actualiza el banner de alertas del dashboard.
 
 ---
 
@@ -117,7 +134,7 @@ Cada vista tiene un archivo JS que asocia los eventos (`addEventListener`) a la 
 
 ### 5.1 Flujo de Inicio de Sesión
 
-A continuación se grafica el ciclo de vida completo de un evento común: el usuario iniciando sesión en la aplicación.
+A continuación se grafica el ciclo de vida completo del inicio de sesión, incluyendo la validación de credenciales y la emisión del JWT.
 
 ```mermaid
 sequenceDiagram
@@ -126,30 +143,29 @@ sequenceDiagram
     participant API as Backend (FastAPI)
     participant Repo as Base de Datos (SQLite)
 
-    Usuario->>UI: Clic en botón "Login"
-    UI->>API: GET /categorias/
-    API-->>UI: Devuelve lista de categorías
-    UI->>Usuario: Muestra formulario
+    Usuario->>UI: Ingresa correo y contraseña, clic "Entrar"
+    UI->>API: POST /auth/login (correo, password)
 
-    Usuario->>UI: Llena correo, elige "Transporte" y clic Guardar
-    UI->>API: POST /movimientos/ (Header: Bearer Token)
-    
-    API->>API: Valida Token JWT
-    API->>API: Valida JSON entrante (Pydantic)
-    
-    API->>Repo: session.add(NuevoMovimiento)
-    API->>Repo: session.commit()
-    Repo-->>API: Row insertado correctamente
-    
-    API-->>UI: 201 Created (JSON del Movimiento)
-    UI->>UI: Muestra notificación Toast (Verde)
-    UI->>UI: Llama a showView('view-dashboard')
-    UI->>Usuario: Muestra el dashboard actualizado
+    API->>Repo: SELECT * FROM users WHERE correo = ?
+    Repo-->>API: Devuelve registro del usuario
+
+    API->>API: bcrypt.verify(password, password_hash)
+
+    alt Credenciales válidas
+        API->>API: Genera JWT (expira en 7 días)
+        API-->>UI: 200 OK (access_token)
+        UI->>UI: localStorage.setItem("moneyflow_token", token)
+        UI->>UI: showView("view-dashboard")
+        UI->>Usuario: Muestra el dashboard
+    else Credenciales inválidas
+        API-->>UI: 401 Unauthorized
+        UI->>Usuario: Muestra Toast de error
+    end
 ```
 
 ### 5.2 Flujo de Registro de un Usuario
 
-A continuación se grafica el ciclo de vida completo de un evento común: el usuario registrando un nuevo usuario en la aplicación.
+A continuación se grafica el ciclo de vida completo del registro, incluyendo la validación de correo único y el hash de contraseña.
 
 ```mermaid
 sequenceDiagram
@@ -158,25 +174,25 @@ sequenceDiagram
     participant API as Backend (FastAPI)
     participant Repo as Base de Datos (SQLite)
 
-    Usuario->>UI: Clic en botón "Registrarse"
-    UI->>API: GET /categorias/
-    API-->>UI: Devuelve lista de categorías
-    UI->>Usuario: Muestra formulario
+    Usuario->>UI: Llena nombre, correo y contraseña, clic "Comenzar"
+    UI->>API: POST /auth/register (nombre, correo, password)
 
-    Usuario->>UI: Llena correo, elige "Transporte" y clic Guardar
-    UI->>API: POST /movimientos/ (Header: Bearer Token)
-    
-    API->>API: Valida Token JWT
-    API->>API: Valida JSON entrante (Pydantic)
-    
-    API->>Repo: session.add(NuevoMovimiento)
-    API->>Repo: session.commit()
-    Repo-->>API: Row insertado correctamente
-    
-    API-->>UI: 201 Created (JSON del Movimiento)
-    UI->>UI: Muestra notificación Toast (Verde)
-    UI->>UI: Llama a showView('view-dashboard')
-    UI->>Usuario: Muestra el dashboard actualizado
+    API->>Repo: SELECT * FROM users WHERE correo = ?
+    Repo-->>API: Resultado de búsqueda
+
+    alt Correo ya registrado
+        API-->>UI: 400 Bad Request ("El correo ya está registrado")
+        UI->>Usuario: Muestra Toast de error
+    else Correo disponible
+        API->>API: bcrypt.hash(password) → password_hash
+        API->>Repo: INSERT INTO users (nombre, correo, password_hash)
+        Repo-->>API: Row insertado correctamente
+        API->>API: Genera JWT para el nuevo usuario
+        API-->>UI: 201 Created (access_token)
+        UI->>UI: localStorage.setItem("moneyflow_token", token)
+        UI->>UI: showView("view-dashboard")
+        UI->>Usuario: Muestra el dashboard
+    end
 ```
 
 ### 5.3 Flujo de Creación de un Gasto
@@ -287,7 +303,44 @@ sequenceDiagram
     UI->>UI: Llama a refreshDashboard() y lista_movimientos()
 ```
 
-### 5.7 Flujo de Autenticación con JWT
+### 5.7 Flujo de Presupuestos y Alertas
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant UI as Frontend (presupuestos.js)
+    participant API as Backend (presupuestos)
+    participant Repo as Base de Datos (SQLite)
+
+    Usuario->>UI: Define límite para "Alimentos: Q2000" y clic Guardar
+    UI->>API: POST /presupuestos/ (categoria_id, limite, mes, anio)
+
+    API->>API: Valida Token JWT y datos (limite > 0)
+    API->>Repo: SELECT presupuesto WHERE user_id=? AND categoria_id=?
+    Repo-->>API: Resultado (existe o no)
+
+    alt Presupuesto nuevo
+        API->>Repo: INSERT INTO presupuestos
+    else Ya existe → actualizar límite
+        API->>Repo: UPDATE presupuestos SET limite=?
+    end
+
+    API->>Repo: SELECT SUM(monto) FROM movimientos WHERE categoria_id=? AND tipo='gasto'
+    Repo-->>API: Total gastado actual
+    API->>API: Calcula pct_usado y determina estado (ok / advertencia / excedido)
+    API-->>UI: 200 OK (PresupuestoResponse con estado)
+    UI->>UI: Refresca lista y llama a cargarAlertas()
+
+    Note over UI,API: Al cargar el dashboard
+    UI->>API: GET /presupuestos/alertas
+    API->>Repo: SELECT presupuestos WHERE user_id=?
+    Repo-->>API: Lista de presupuestos
+    API->>API: Filtra los que tienen pct_usado >= 75%
+    API-->>UI: Lista de alertas activas
+    UI->>UI: Renderiza banner con alertas 🟡/🔴
+```
+
+### 5.8 Flujo de Autenticación con JWT
 
 ```mermaid
 sequenceDiagram
