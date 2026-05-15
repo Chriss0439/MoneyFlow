@@ -6,6 +6,14 @@
 window.movimientosController = {
     categoriasDisponibles: [],
 
+    cargarCategorias: async function() {
+        try {
+            this.categoriasDisponibles = await api.getCategorias();
+        } catch (error) {
+            console.error("Error recargando categorías", error);
+        }
+    },
+
     openForm: async function(tipo) {
         document.getElementById('mov-tipo').value = tipo;
         document.getElementById('add-mov-title').textContent = tipo === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Gasto';
