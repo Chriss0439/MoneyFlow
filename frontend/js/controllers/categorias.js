@@ -7,6 +7,8 @@ window.categoriasController = {
     loadData: async function() {
         try {
             const categorias = await api.getCategorias();
+            document.getElementById('input-search-categorias').value = '';
+            filtrarCategorias('');
             
             const listIngresos = document.getElementById('categorias-ingreso-list');
             const listGastos = document.getElementById('categorias-gasto-list');
@@ -92,6 +94,39 @@ window.categoriasController = {
         }
     }
 };
+
+// ================= BÚSQUEDA =================
+
+function filtrarCategorias(query) {
+    const q = query.toLowerCase().trim();
+
+    const ingresoCards = document.querySelectorAll('#categorias-ingreso-list .glass-card');
+    const gastoCards   = document.querySelectorAll('#categorias-gasto-list .glass-card');
+
+    let visiblesIngreso = 0;
+    let visiblesGasto   = 0;
+
+    ingresoCards.forEach(card => {
+        const nombre = card.querySelector('h4').textContent.toLowerCase();
+        const visible = nombre.includes(q);
+        card.style.display = visible ? '' : 'none';
+        if (visible) visiblesIngreso++;
+    });
+
+    gastoCards.forEach(card => {
+        const nombre = card.querySelector('h4').textContent.toLowerCase();
+        const visible = nombre.includes(q);
+        card.style.display = visible ? '' : 'none';
+        if (visible) visiblesGasto++;
+    });
+
+    document.getElementById('section-header-ingresos').style.display = visiblesIngreso > 0 ? '' : 'none';
+    document.getElementById('section-header-gastos').style.display   = visiblesGasto   > 0 ? '' : 'none';
+}
+
+document.getElementById('input-search-categorias').addEventListener('input', (e) => {
+    filtrarCategorias(e.target.value);
+});
 
 // ================= NAVEGACIÓN =================
 
